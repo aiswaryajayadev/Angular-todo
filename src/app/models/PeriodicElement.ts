@@ -1,6 +1,7 @@
-export interface PeriodicElement {
-    name: string;
-    position: number;
-    weight: number;
-    symbol: string;
+export interface Todo {
+    id: number;
+    todo:string;
+    completed: boolean;
+    userId: number;
+  
   }

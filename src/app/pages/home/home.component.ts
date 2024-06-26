@@ -5,6 +5,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { MatIconModule} from '@angular/material/icon';
 import { ApiService } from '../../services/api.service';
 import { NgClass, NgIf } from '@angular/common';
+import { Todo } from '../../models/PeriodicElement';
+import { TodoResponse } from '../../models/TodoResponse';
 
 
 
@@ -31,30 +33,25 @@ import { NgClass, NgIf } from '@angular/common';
 })
 export class HomeComponent  { 
 
-  data: any; // Replace 'any' with your expected data type
-  ELEMENT_DATA:any[]=[];
+  data: Todo[]=[]; // Replace 'any' with your expected data type
+  ELEMENT_DATA:Todo[]=[];
   displayedColumns: string[] = ['select', 'position', 'name', 'Edit', 'Delete'];
   dataSource = new MatTableDataSource<any>;
-  selection = new SelectionModel<any>(true, []);
+  selection = new SelectionModel<Todo>(true, []);
   constructor(private apiService: ApiService) {
 
-    this.dataSource= new MatTableDataSource<any>(this.ELEMENT_DATA)
+    this.dataSource= new MatTableDataSource<Todo>(this.ELEMENT_DATA)
    }
-
- 
-
-
   
 
    ngOnInit() {
     this.apiService.getData()
-      .subscribe(data => {
-        this.data = data;
-        this.ELEMENT_DATA = this.data.todos; // Assuming `data.todos` is an array of `Todo`
-       
+      .subscribe((response: TodoResponse) => {
+        console.log("API Response:", response);
+        this.data = response.todos;
+        this.ELEMENT_DATA = this.data;
+        
         console.log("todo data", this.ELEMENT_DATA);
-        
-        
       });
   }
 
@@ -80,7 +77,7 @@ export class HomeComponent  {
     this.selection.select(...this.dataSource.data);
   }
 
-  checkboxLabel(row?: any): string {
+  checkboxLabel(row?: Todo): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
     }
